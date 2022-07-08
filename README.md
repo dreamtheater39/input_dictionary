@@ -3,7 +3,8 @@ Dictionary custom component for Home Assistant
 
 Download Latest release:
 https://github.com/dreamtheater39/input_dictionary/releases/download/v0.1.0/input_dictionary.zip
-Install by placing this in your config/custom_components/input_dictionary folder
+
+Install by placing this in your 'config/custom_components/input_dictionary' Home Assistant folder
 
 Here's what it does -
 1. Add a dictionary entity
