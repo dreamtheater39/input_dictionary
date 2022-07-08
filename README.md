@@ -3,6 +3,7 @@ Dictionary custom component for Home Assistant
 
 Download Latest release:
 https://github.com/dreamtheater39/input_dictionary/releases/download/v0.1.0/input_dictionary.zip
+Install by placing this in your config/custom_components/input_dictionary folder
 
 Here's what it does -
 1. Add a dictionary entity
@@ -10,6 +11,7 @@ Here's what it does -
 3. Append - adds new key/values, modifies values if any keys already present
 4. Remove - removes a key/value based on the key provided as input
 5. Reset - clears the entire dictionary
+
 
 Here's a configuration.yaml example
 ```
