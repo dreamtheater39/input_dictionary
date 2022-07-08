@@ -35,3 +35,28 @@ value_template: >-
   {{ (state_attr('input_dictionary.global_dictionary', 'dictionary').bedroom) ==
   "scene_relax" }}
 ```
+
+Here's another use case
+1. Create a dictionary of rooms/areas in your house
+2. Add each room/area as a key to the dictionary
+3. The value of the room key can contain another dictionary object describing properties of the room such as (current_scene, occupancy, triggered_by, etc.)
+4. Use these room properties to add more control to your automations! Example - turn off lights when no_motion only if it was turned on by motion in the first place etc. Restore a scene back to what it was earlier or refer to neighboring room scenes and set scene accordingly etc.
+Here's a template example of reading from a dictionary object that's set as a value to a key
+
+Set a dictionary as value
+```
+service: input_dictionary.append_dictionary
+data:
+  keyvalues: >-
+    {"guest":'{"occupied":"true","scene":"bright","trigger":"motion
+    triggered"}'}
+target:
+  entity_id: input_dictionary.dictionarytest
+```
+Get attributes from the dictionary using this template
+```
+{{ (state_attr('input_dictionary.dictionarytest', 'dictionary').guest|from_json).occupied }}
+```
+
+
+
