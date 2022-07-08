@@ -1,0 +1,39 @@
+append_dictionary:
+  name: Append
+  description: Add/Append key/value pairs in the dictionary entity
+  target:
+    entity:
+      domain: input_dictionary
+  fields:
+    keyvalues:
+      name: Key/Value Pairs
+      description: Add Key/value pairs to the dictionary entity. If the keys already exist, the values are replaced with the new ones.
+      required: true
+      example: '["Key A":"Value 1", "Key B":"Value 2", "Key C":"Value 3"]'
+      selector:
+        text:
+
+remove_key:
+  name: Remove
+  description: Remove a key/value pair from the dictionary
+  target:
+    entity:
+      domain: input_dictionary
+  fields:
+    key:
+      name: Key
+      description: List of keys to remove from dictionary entity
+      required: true
+      selector:
+        text:
+
+reset_dictionary:
+  name: Reset
+  description: Reset the dictionary entity
+  target:
+    entity:
+      domain: input_dictionary
+
+reload:
+  name: Reload
+  description: Reload the input_select configuration.
