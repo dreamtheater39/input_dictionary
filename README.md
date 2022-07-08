@@ -1,6 +1,9 @@
 # Dictionary Custom Component for Home Assitant
 Dictionary custom component for Home Assistant
 
+Download Latest release:
+https://github.com/dreamtheater39/input_dictionary/releases/download/v0.1.0/input_dictionary.zip
+
 Here's what it does -
 1. Add a dictionary entity
 2. Exposes 3 services - Append, Remove, Reset
