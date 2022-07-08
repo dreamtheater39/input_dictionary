@@ -178,7 +178,7 @@ class InputDictionary(RestoreEntity):
         """Initialize Dictionary obj."""
         self._config = config
         self.editable = True
-        self.dictionary: dict[str, str] = {}
+        self.dictionary: dict = {}
         self.keyvalues: str = ""
 
     @classmethod
