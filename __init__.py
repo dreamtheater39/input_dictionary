@@ -42,6 +42,8 @@ SERVICE_RESET_DICTIONARY = "reset_dictionary"
 STORAGE_KEY = DOMAIN
 STORAGE_VERSION = 1
 
+ENTITY_ID_FORMAT = DOMAIN + ".{}"
+
 
 def _cv_input_text(cfg: ConfigType) -> ConfigType:
     """Configure validation helper for input number (voluptuous)."""
@@ -95,7 +97,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         logging.getLogger(f"{__name__}.yaml_collection"), id_manager
     )
     collection.sync_entity_lifecycle(
-        hass, DOMAIN, DOMAIN, component, yaml_collection, InputDictionary.from_yaml
+        hass, DOMAIN, DOMAIN, component, yaml_collection, InputDictionary
     )
 
     storage_collection = InputDictionaryStorageCollection(
@@ -106,10 +108,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     collection.sync_entity_lifecycle(
         hass, DOMAIN, DOMAIN, component, storage_collection, InputDictionary
     )
-
     await yaml_collection.async_load(
-        [{CONF_ID: id_, **(conf or {})} for id_, conf in config.get(DOMAIN, {}).items()]
+        [{CONF_ID: id_, **cfg} for id_, cfg in config.get(DOMAIN, {}).items()]
     )
+
     await storage_collection.async_load()
 
     collection.StorageCollectionWebsocket(
@@ -122,7 +124,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         if conf is None:
             conf = {DOMAIN: {}}
         await yaml_collection.async_load(
-            [{CONF_ID: id_, **(cfg or {})} for id_, cfg in conf.get(DOMAIN, {}).items()]
+            [{CONF_ID: id_, **cfg} for id_, cfg in conf.get(DOMAIN, {}).items()]
         )
 
     homeassistant.helpers.service.async_register_admin_service(
@@ -171,21 +173,27 @@ class InputDictionaryStorageCollection(collection.StorageCollection):
         return _cv_input_text({**data, **update_data})
 
 
-class InputDictionary(RestoreEntity):
+class InputDictionary(collection.CollectionEntity, RestoreEntity):
     """Represent a Dictionary."""
 
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: ConfigType) -> None:
         """Initialize Dictionary obj."""
-        self._config = config
+        self._config: ConfigType = config
         self.editable = True
-        self.dictionary: dict = {}
+        self.dictionary: dict[str, str] = {}
         self.keyvalues: str = ""
 
+    def from_storage(cls, config: ConfigType) -> Counter:
+        """Create counter instance from storage."""
+        counter = cls(config)
+        counter.editable = True
+        return counter
+
     @classmethod
-    def from_yaml(cls, config: dict) -> InputDictionary:
+    def from_yaml(cls, config: ConfigType) -> InputDictionary:
         """Return entity instance initialized from yaml storage."""
         input_dictionary = cls(config)
-        input_dictionary.entity_id = f"{DOMAIN}.{config[CONF_ID]}"
+        input_dictionary.entity_id = ENTITY_ID_FORMAT.format(config[CONF_ID])
         input_dictionary.editable = False
         input_dictionary.keyvalues = str(config.get(CONF_DICTIONARY_STR))
         if len(input_dictionary.keyvalues) > 0:
